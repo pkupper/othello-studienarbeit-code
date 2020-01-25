@@ -1,27 +1,8 @@
-#  Kevan Hong-Nhan Nguyen 71632979.  ICS 32 Lab sec 9.  Project #5.
+# Originally from Kevan Hong-Nhan Nguyen 71632979.  ICS 32 Lab sec 9.  Project #5.
 
 import othello
 import othello_models
 import tkinter
-
-
-#### NOTE! You can change the game's settings by going to the menu
-#### bar and clicking on
-####
-#### Game > Game Settings
-####
-#### Otherwise, the game's settings will remain the same.
-####
-#### If you want to play a new game, you just click on
-#### Game > New Game
-
-
-# Default / Initial Game Settings
-DEFAULT_ROWS = 8
-DEFAULT_COLUMNS = 8
-DEFAULT_FIRST_PLAYER = othello.BLACK
-DEFAULT_TOP_LEFT_PLAYER = othello.WHITE
-DEFAULT_VICTORY_TYPE = othello.MOST_CELLS
 
 # GUI Constants
 BACKGROUND_COLOR = othello_models.BACKGROUND_COLOR
@@ -30,18 +11,8 @@ GAME_WIDTH = 300
 
 class OthelloGUI:
     def __init__(self):
-        # Initial Game Settings
-        self._rows = DEFAULT_ROWS
-        self._columns = DEFAULT_COLUMNS
-        self._first_player = DEFAULT_FIRST_PLAYER
-        self._top_left_player = DEFAULT_TOP_LEFT_PLAYER
-        self._victory_type = DEFAULT_VICTORY_TYPE
-
-        
         # Create my othello gamestate here (drawn from the original othello game code)
-        self._game_state = othello.OthelloGame(self._rows, self._columns,
-                                               self._first_player, self._top_left_player,
-                                               self._victory_type)
+        self._game_state = othello.OthelloGameState()
 
         
         # Initialize all my widgets and window here
@@ -62,7 +33,6 @@ class OthelloGUI:
         self._menu_bar = tkinter.Menu(self._root_window)
         self._game_menu = tkinter.Menu(self._menu_bar, tearoff = 0)
         self._game_menu.add_command(label = 'New Game', command = self._new_game)
-        self._game_menu.add_command(label = 'Game Settings', command = self._configure_game_settings)
         self._game_menu.add_separator()
         self._game_menu.add_command(label = 'Exit', command = self._root_window.destroy)
         self._menu_bar.add_cascade(label = 'Game', menu = self._game_menu)
@@ -93,37 +63,13 @@ class OthelloGUI:
         ''' Runs the mainloop of the root window '''
         self._root_window.mainloop()
 
-
-    def _configure_game_settings(self) -> None:
-        ''' Pops out an options window to configure the game settings '''
-        dialog = othello_models.OptionDialog(self._rows, self._columns,
-                                             self._first_player, self._top_left_player,
-                                             self._victory_type)
-        dialog.show()
-        if dialog.was_ok_clicked():
-            # If the user clicked 'OK', then change all of the current game
-            # settings to whatever the user chose them to be
-            self._rows = dialog.get_rows()
-            self._columns = dialog.get_columns()
-            self._first_player = dialog.get_first_player()
-            self._top_left_player = dialog.get_top_left_player()
-            self._victory_type = dialog.get_victory_type()
-
-            # Create a new game with these settings now
-            self._new_game()
-            
-
     def _new_game(self) -> None:
         ''' Creates a new game with current _game_state settings '''
-        self._game_state = othello.OthelloGame(self._rows, self._columns,
-                                                   self._first_player, self._top_left_player,
-                                                   self._victory_type)
-        self._board.new_game_settings(self._game_state)
+        self._game_state = othello.OthelloGameState()
         self._board.redraw_board()
         self._black_score.update_score(self._game_state)
         self._white_score.update_score(self._game_state)
         self._player_turn.update_turn(self._game_state.get_turn())
-        
 
     def _on_board_clicked(self, event: tkinter.Event) -> None:
         ''' Attempt to play a move on the board if it's valid '''
@@ -141,25 +87,24 @@ class OthelloGUI:
                 self._player_turn.display_winner(self._game_state.return_winner())
             else:
                 self._player_turn.switch_turn(self._game_state)
-        except:
+        except othello.InvalidMoveException:
             pass
+        except:
+            raise
 
     def _convert_point_coord_to_move(self, pointx: int, pointy: int) -> None:
         ''' Converts canvas point to a move that can be inputted in the othello game '''
         row = int(pointy // self._board.get_cell_height())
-        if row == self._board.get_rows():
+        if row == 8:
             row -= 1
         col = int(pointx // self._board.get_cell_width())
-        if col == self._board.get_columns():
+        if col == 8:
             col -= 1
         return (row, col)
         
-
     def _on_board_resized(self, event: tkinter.Event) -> None:
         ''' Called whenever the canvas is resized '''
         self._board.redraw_board()
-
-
 
 if __name__ == '__main__':
     OthelloGUI().start()
