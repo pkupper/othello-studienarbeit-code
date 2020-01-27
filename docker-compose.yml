@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  jupyter:
+    container_name: "jupyter_othello"
+    image: jupyter/scipy-notebook
+    ports:
+     - "8888:8888"
+    volumes:
+     - "./:/home/jovyan/work"
