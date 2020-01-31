@@ -3,7 +3,7 @@ version: "3.7"
 services:
   jupyter:
     container_name: "jupyter_othello"
-    image: jupyter/scipy-notebook
+    image: tomathomas/jupyter:latest
     ports:
      - "8888:8888"
     volumes:
