@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.3"
 
 services:
   jupyter:
@@ -8,3 +8,19 @@ services:
      - "8888:8888"
     volumes:
      - "./:/home/jovyan/work"
+  firefox:
+    container_name: "firefox"
+    image: jlesage/firefox
+    ports:
+     - "4444:5900"
+    environment:
+#     - SECURE_CONNECTION=1
+     - KEEP_APP_RUNNING=1
+     - VNC_PASSWORD=Test1234
+     - DISPLAY_WIDTH=1920
+     - DISPLAY_HEIGHT=1080
+    shm_size: 2gb
+    volumes:
+     - /docker/appdata/firefox:/config:rw
+    links:
+     - jupyter:jupyter
