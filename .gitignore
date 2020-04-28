@@ -3,4 +3,5 @@ __pycache__
 
 *.csv
 !probcut_dataset_2_4.csv
+!probcut_dataset_1_3.csv
 !previous_ai/start_moves.csv
