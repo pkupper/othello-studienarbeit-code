@@ -1,5 +1,6 @@
 .ipynb_checkpoints
 __pycache__
+Untitled*.ipynb
 
 *.csv
 !probcut_dataset_2_4.csv
