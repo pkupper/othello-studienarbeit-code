@@ -3,6 +3,6 @@ __pycache__
 Untitled*.ipynb
 
 *.csv
-!probcut_dataset_2_4.csv
-!probcut_dataset_1_3.csv
+!pc_dataset_2_4.csv
+!pc_dataset_1_3.csv
 !previous_ai/start_moves.csv
